@@ -140,7 +140,19 @@ SELECT * FROM Customers
 FETCH NEXT 2 ROWS ONLY;
 ```
 
-## 10. isnull
+## 10. offset
+- 원하는 행의 수만큼 건너뛴 이후 행부터 
+```SQL
+SELECT column1, column2, ...
+FROM table_name
+OFFSET number ROWS;
+
+## 예시
+SELECT * FROM Customers
+OFFSET 2 ROWS; ##세번째 행부터 조회
+```
+
+## 11. isnull
 - 결측치 확인시 사용
 ```SQL
 SELECT column1, column2, ...
