@@ -1,2 +1,2 @@
-# SQLstudy
-SQL 스터디 공부 기록
+# DA_study
+DA 스터디 공부 기록
