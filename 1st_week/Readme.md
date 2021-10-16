@@ -22,7 +22,7 @@ SELECT column1, column2, ...
 FROM table_name
 ORDER BY column1, column2, ... ASC|DESC;
 
-## 예시
+-- 예시
 SELECT * FROM Customers
 ORDER BY Country ASC, CustomerName DESC;
 ```
@@ -34,7 +34,7 @@ SELECT column1, column2, ...
 FROM table_name
 WHERE condition;
 
-## 예시
+-- 예시
 SELECT * FROM Customers
 WHERE Country='Mexico';
 ```
@@ -61,7 +61,7 @@ SELECT column_name(s)
 FROM table_name
 WHERE column_name IN (SELECT STATEMENT);
 
-## 예시
+-- 예시
 SELECT * FROM Customers
 WHERE Country IN ('Germany', 'France', 'UK');
 
@@ -77,15 +77,15 @@ SELECT column_name(s)
 FROM table_name
 WHERE column_name BETWEEN value1 AND value2;
 
-## 예시
+-- 예시
 SELECT * FROM Products
 WHERE Price BETWEEN 10 AND 20;
 
 SELECT * FROM Products
-WHERE Price NOT BETWEEN 10 AND 20; ##10-20이 아닌 값
+WHERE Price NOT BETWEEN 10 AND 20; --10-20이 아닌 값
 
 SELECT * FROM Products
-WHERE ProductName BETWEEN 'Carnarvon Tigers' AND 'Mozzarella di Giovanni' ##
+WHERE ProductName BETWEEN 'Carnarvon Tigers' AND 'Mozzarella di Giovanni' --문자열
 ORDER BY ProductName;
 ```
 
@@ -99,7 +99,7 @@ SELECT column1, column2, ...
 FROM table_name
 WHERE columnN LIKE pattern;
 
-## 예시
+-- 예시
 SELECT * FROM Customers
 WHERE CustomerName LIKE 'a%' ##a로 시작하는 모든 고객
 ```
@@ -123,7 +123,7 @@ SELECT column1, column2, ...
 FROM table_name
 LIMIT number;
 
-## 예시
+-- 예시
 SELECT * FROM Customers
 LIMIT 3;
 ```
@@ -135,7 +135,7 @@ SELECT column1, column2, ...
 FROM table_name
 FETCH NEXT number ROWS ONLY;
 
-## 예시
+-- 예시
 SELECT * FROM Customers
 FETCH NEXT 2 ROWS ONLY;
 ```
@@ -147,7 +147,7 @@ SELECT column1, column2, ...
 FROM table_name
 OFFSET number ROWS;
 
-## 예시
+-- 예시
 SELECT * FROM Customers
 OFFSET 2 ROWS; ##세번째 행부터 조회
 ```
@@ -157,7 +157,7 @@ OFFSET 2 ROWS; ##세번째 행부터 조회
 ```SQL
 SELECT column1, column2, ...
 FROM table_name
-WHERE columnN IS NULL;
+WHERE columnN ISNULL;
 
 SELECT column1, column2, ...
 FROM table_name
