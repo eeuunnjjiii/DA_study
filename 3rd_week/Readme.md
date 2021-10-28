@@ -99,10 +99,28 @@ GROUP BY CUBE(column_name(s));
 
 <img width="630" alt="스크린샷 2021-10-27 오전 8 44 06" src="https://user-images.githubusercontent.com/75970111/138976492-3d981ff7-f9b9-42e4-af97-8944fbd962e0.png">
 
-## 7. 분석 함수 = Window Function
-- 결과 데이터의 각 행마다 집게결과를 함께 반환
+## 7. WINDOW FUNCTION
+- 행과 행 간의 관계 정의 목적
+- 순위, 합계, 평균, 행 위치 등 조작 가능
+- `GROUP BY`와 병행해서 사용 못함
+- 참고 : https://velog.io/@yewon-july/Window-Function
+
+```SQL
+SELECT WINDOW_FUNCTION(args)
+       OVER ([PARTITION BY column_name(s)]
+            [ORDER BY WIDOWING절](ROWS | RANGE BETWEEN))
+FROM table_name
+
+-- PARTITION BY : 전체 집합을 기준에 의해 소그룹으로 나눔
+-- ORDER BY : 어떤 항목에 대해 정렬
+-- WINDOWING : 행의 기준 범위를 정함, ROWS는 물리적 결과 행의 수, RANGE는 논리적 값에 의한 범위
+```
+<img width="580" alt="스크린샷 2021-10-28 오후 12 19 09" src="https://user-images.githubusercontent.com/75970111/139180535-015dd03d-b70e-4edf-9e50-e0b022e6fe83.png">
+
+## 8. PARTITION BY 
+- 결과 데이터의 각 행마다 집계결과를 함께 반환
 - 반면, 집계함수는 그룹별 1개의 행 반환
-- 참고 : https://velog.io/@mindddi/SQL-%EB%B6%84%EC%84%9D%ED%95%A8%EC%88%98
+- 참고 : https://velog.io/@mindddi/SQL-%EB%B6%84%EC%84%9D%ED%95%A8%EC%88%98, https://gent.tistory.com/442
 ```SQL
 SELECT ANALYTIC_FUNCTION(args) --분석함수명(입력인자)
        OVER ( --분석함수임을 나타내는 키워드
@@ -112,6 +130,8 @@ SELECT ANALYTIC_FUNCTION(args) --분석함수명(입력인자)
             )
 FROM table_name;
 ```
+<img width="492" alt="스크린샷 2021-10-28 오후 12 10 16" src="https://user-images.githubusercontent.com/75970111/139179662-b498dfdd-a401-40a0-9f7a-5f7305312ed7.png">
+
 ### 1) RANK
 - 순위 계산, 각 행마다 순위를 매겨주는 함수
 - `PARTITION` 내에서 `ORDER BY`절에 명시된대로 정렬된 후의 순위를 의미
@@ -147,17 +167,24 @@ RATIO_TO_REPORT() OVER (ORDER BY column1, column2)
 FROM table_name;
 ```
 ### 5) LAG/LEAD
-- 특정 행의 컬럼 값을 참조하거나 비교하고자 할 때 사용
-- LAG(컬럼명, 이전위치, 기준 현재위치) : 지정 컬럼의 현재 행 기준으로 이전 행 값 조회
-- LEAD(컬럼명, 다음행 수, 기준 현재위치) : 현재 행 기준으로 이후 값 참조
-- 참고 : https://velog.io/@kyy806/sql-%EB%B6%84%EC%84%9D%ED%95%A8%EC%88%98
+- LAG : 이전 행의 값 리턴
+- LEAD : 다음 행의 값 리턴
+- 참고 : https://gent.tistory.com/339
 ```SQL
+LAG (expr [,offset] [,default]) OVER ([partition_by_clause] order_by_clause)
+-- LEAD도 동일
+-- expr : 대상 컬럼명
+-- offset : 값을 가져올 행의 위치, 기본값=1, 생략가능
+-- default : 값이 없을 경우 기본값, 생략가능
+-- partition_by_clause : 그룹 컬럼명, 생략가능
+-- order_by_clause : 정렬 컬럼명, 필수
+
 SELECT column_name(s)
-LAG() OVER (ORDER BY column1, column2)
+LAG(column_name) OVER (ORDER BY column1, column2)
 FROM table_name;
 
 SELECT column_name(s)
-LEAD() OVER (ORDER BY column1, column2)
+LEAD(column_name, 2, 100) OVER (ORDER BY column1, column2) -- 2번째 이후 값 표시, 없을 경우 기본값 100 표시
 FROM table_name;
 ```
 
@@ -165,7 +192,7 @@ FROM table_name;
 - FIRST_VALUE : 윈도우 정렬값 중 첫번째 값 리턴
 - LAST_VALUE : 윈도우 정렬값 중 마지막 값 리턴
 
-## 8. AVG 함수
+## 9. AVG 함수
 - 선택된 그룹 값의 평균을 반환
 - NULL 값은 0으로 계산
 ```SQL
@@ -174,7 +201,22 @@ FROM table_name
 WHERE condition;
 ```
 
-## 12. 조건연산자, with문, 트랜잭션
-## 13. window function
-## 14. CTE
-## 15. Partition by
+## 10. WITH
+- 쿼리 구문 반복 사용 가능
+- 참고 : https://royzero.tistory.com/50
+
+```SQL
+WITH tmp_table_name AS (SELECT ..) --서브쿼리문
+SELECT column_names
+FROM tmp_table_name;
+
+-- 2개 이상의 임시 테이블
+WITH tmp_table_name1 AS (SELECT ..), --서브쿼리문1
+WITH tmp_table_name2 AS (SELECT ..) --서브쿼리문2
+SELECT column_names
+FROM tmp_table_name1, tmp_table_name2;
+```
+## 11. Transaction(트랜잭션)
+- 데이터베이스 처리 작업이 모두 완료되거나 모두 취소되게 하는 작업의 단위
+- `COMMIT` : 데이터베이스에 영구 반영
+- `ROLLBACK` : 명령어 수행 모두 취소, 바로 전 트랜잭션 시작 시점으로 돌아감
